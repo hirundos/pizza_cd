@@ -1,0 +1,33 @@
+apiVersion: sparkoperator.k8s.io/v1beta2
+kind: SparkApplication
+metadata:
+  name: silver-etl
+  namespace: default   # 필요에 맞게 수정
+spec:
+  type: Python
+  mode: cluster
+  image: asia-northeast3-docker.pkg.dev/PROJECT_ID/etl-repo/silver-etl:latest
+  imagePullPolicy: Always
+  mainApplicationFile: "local:///opt/spark/applications/silver_etl.py"
+  sparkVersion: "3.5.0"
+  restartPolicy:
+    type: OnFailure
+    onFailureRetries: 3
+    onFailureRetryInterval: 10
+    onSubmissionFailureRetries: 5
+    onSubmissionFailureRetryInterval: 20
+  driver:
+    cores: 1
+    memory: 1024m
+    serviceAccount: spark   # GCS 접근 권한 있는 서비스 어카운트
+    labels:
+      version: 3.5.0
+  executor:
+    instances: 2
+    cores: 1
+    memory: 2g
+    labels:
+      version: 3.5.0
+  deps:
+    jars:
+      - "local:///opt/spark/jars/gcs-connector-hadoop3-latest.jar"

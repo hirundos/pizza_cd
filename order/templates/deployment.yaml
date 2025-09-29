@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order
+  template:
+    metadata:
+      labels:
+        app: order
+    spec:
+      hostNetwork: true
+      serviceAccountName: pz-ksa
+      containers:
+      - name: order
+        image: "{{ .Values.order.image.repository }}:{{ .Values.order.image.tag }}"
+        ports:
+        - containerPort: 8000
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "1000m"
+            memory: "1024Mi"
+              
+      - name: cloudsql-proxy
+        image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.17.0
+        args:
+          - "--structured-logs"
+          - "--port=5432"
+          - "--private-ip"
+          - "kdt1-finalproject:asia-northeast3:pz-db"
+        securityContext:
+          runAsNonRoot: true

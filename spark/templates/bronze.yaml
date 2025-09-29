@@ -1,0 +1,58 @@
+apiVersion: sparkoperator.k8s.io/v1beta2
+kind: SparkApplication
+metadata:
+  name: bronze-job
+  namespace: spark
+spec:
+  type: Scala
+  mode: cluster
+  image: gcr.io/YOUR_PROJECT_ID/spark:latest
+  imagePullPolicy: Always
+  mainClass: com.example.BronzeJob
+  mainApplicationFile: "local:///opt/spark/applications/bronze-job.jar"
+  sparkVersion: "3.5.0"
+  restartPolicy:
+    type: OnFailure
+    onFailureRetries: 3
+    onFailureRetryInterval: 10
+    onSubmissionFailureRetries: 5
+    onSubmissionFailureRetryInterval: 20
+  driver:
+    cores: 1
+    memory: 1024m
+    serviceAccount: spark-sa
+    labels:
+      version: 3.5.0
+  executor:
+    cores: 2
+    instances: 2
+    memory: 2048m
+  deps:
+    jars:
+      - "local:///opt/spark/jars/gcs-connector-hadoop3-latest.jar"
+  sparkConf:
+    # GCS connector 설정
+    "spark.hadoop.fs.gs.impl": com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem
+    "spark.hadoop.fs.AbstractFileSystem.gs.impl": com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS
+    "spark.hadoop.google.cloud.auth.service.account.enable": "true"
+    "spark.hadoop.google.cloud.auth.service.account.json.keyfile": "/mnt/secrets/key.json"
+  volumes:
+    - name: gcp-sa-key
+      secret:
+        secretName: gcp-sa-secret
+  driver:
+    cores: 1
+    memory: 1024m
+    serviceAccount: spark-sa
+    volumeMounts:
+      - name: gcp-sa-key
+        mountPath: /mnt/secrets
+        readOnly: true
+  executor:
+    cores: 2
+    instances: 2
+    memory: 2048m
+    volumeMounts:
+      - name: gcp-sa-key
+        mountPath: /mnt/secrets
+        readOnly: true
