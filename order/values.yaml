@@ -2,3 +2,6 @@ order:
   image:
     repository: asia-northeast3-docker.pkg.dev/kdt1-finalproject/ay-repo/order
     tag: "1.0.0-19990101"
+image:
+  tag: 20251001-1.0.2
+  name: order
