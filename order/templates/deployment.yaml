@@ -16,7 +16,7 @@ spec:
       serviceAccountName: pz-ksa
       containers:
       - name: order
-        image: "{{ .Values.order.image.repository }}:{{ .Values.order.image.tag }}"
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         envFrom:
           - secretRef:
               name: db-secret

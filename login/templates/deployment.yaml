@@ -16,7 +16,7 @@ spec:
       serviceAccountName: pz-ksa
       containers:
       - name: login
-        image: "{{ .Values.login.image.repository }}:{{ .Values.login.image.tag }}"
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         envFrom:
           - secretRef:
               name: db-secret
