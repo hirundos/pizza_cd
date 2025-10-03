@@ -1,4 +1,4 @@
 image:
-  tag: 20251001-1.0.2
+  tag: 20251003-1.0.3
   repository: asia-northeast3-docker.pkg.dev/kdt1-finalproject/ay-repo/login
   name: login
