@@ -17,6 +17,9 @@ spec:
       containers:
       - name: menu
         image: "{{ .Values.menu.image.repository }}:{{ .Values.menu.image.tag }}"
+        envFrom:
+          - secretRef:
+              name: db-secret
         ports:
         - containerPort: 8000
         resources:
@@ -29,9 +32,15 @@ spec:
               
       - name: cloudsql-proxy
         image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.17.0
+        env:
+        - name: POSTGRES_PORT
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: POSTGRES_PORT
         args:
           - "--structured-logs"
-          - "--port=5432"
+          - "--port=$(POSTGRES_PORT)"
           - "--private-ip"
           - "kdt1-finalproject:asia-northeast3:pz-db"
         securityContext:

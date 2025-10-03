@@ -2,7 +2,7 @@ apiVersion: sparkoperator.k8s.io/v1beta2
 kind: SparkApplication
 metadata:
   name: silver-etl
-  namespace: default   # 필요에 맞게 수정
+  namespace: spark   # 필요에 맞게 수정
 spec:
   type: Python
   mode: cluster
@@ -19,7 +19,7 @@ spec:
   driver:
     cores: 1
     memory: 1024m
-    serviceAccount: spark   # GCS 접근 권한 있는 서비스 어카운트
+    serviceAccount: spark-sa   # GCS 접근 권한 있는 서비스 어카운트
     labels:
       version: 3.5.0
   executor:

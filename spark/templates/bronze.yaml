@@ -6,7 +6,7 @@ metadata:
 spec:
   type: Scala
   mode: cluster
-  image: gcr.io/YOUR_PROJECT_ID/spark:latest
+  image: asia-northeast3-docker.pkg.dev/PROJECT_ID/etl-repo/bronze-etl:latest
   imagePullPolicy: Always
   mainClass: com.example.BronzeJob
   mainApplicationFile: "local:///opt/spark/applications/bronze-job.jar"
@@ -15,7 +15,7 @@ spec:
     type: OnFailure
     onFailureRetries: 3
     onFailureRetryInterval: 10
-    onSubmissionFailureRetries: 5
+    onSubmissionFailureRetries: 5s
     onSubmissionFailureRetryInterval: 20
   driver:
     cores: 1

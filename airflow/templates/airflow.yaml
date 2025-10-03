@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/your-org/infra-repo.git'
+    repoURL: 'https://github.com/hirundos/pizza_cd.git'
     targetRevision: main
     path: airflow
     helm:
