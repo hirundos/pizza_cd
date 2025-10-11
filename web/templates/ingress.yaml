@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: backend-ingress
   annotations:
-    ingressClassName: gce
+    kubernetes.io/ingress.class: "gce" 
 spec:
   rules:
     - host: myapp.local
