@@ -6,7 +6,7 @@ metadata:
 spec:
   type: Python
   mode: cluster
-  image: asia-northeast3-docker.pkg.dev/PROJECT_ID/etl-repo/gold-etl:latest
+  image: asia-northeast3-docker.pkg.dev/pz-project-473804/ay-repo/gold:20251002-1.0.1
   imagePullPolicy: Always
   mainApplicationFile: "local:///opt/spark/applications/gold_etl.py"
   sparkVersion: "3.5.0"
@@ -19,7 +19,7 @@ spec:
   driver:
     cores: 1
     memory: 1024m
-    serviceAccount: spark-sa   # GCS + BigQuery 권한 있는 서비스어카운트
+    serviceAccount: pz-ksa   # GCS + BigQuery 권한 있는 서비스어카운트
     labels:
       version: 3.5.0
   executor:

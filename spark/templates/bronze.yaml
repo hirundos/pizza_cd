@@ -6,7 +6,7 @@ metadata:
 spec:
   type: Scala
   mode: cluster
-  image: asia-northeast3-docker.pkg.dev/PROJECT_ID/etl-repo/bronze-etl:latest
+  image: asia-northeast3-docker.pkg.dev/pz-project-473804/ay-repo/bronze:20251002-1.0.1
   imagePullPolicy: Always
   mainClass: com.example.BronzeJob
   mainApplicationFile: "local:///opt/spark/applications/bronze-job.jar"
@@ -15,44 +15,42 @@ spec:
     type: OnFailure
     onFailureRetries: 3
     onFailureRetryInterval: 10
-    onSubmissionFailureRetries: 5s
+    onSubmissionFailureRetries: 5
     onSubmissionFailureRetryInterval: 20
-  driver:
-    cores: 1
-    memory: 1024m
-    serviceAccount: spark-sa
-    labels:
-      version: 3.5.0
-  executor:
-    cores: 2
-    instances: 2
-    memory: 2048m
   deps:
     jars:
       - "local:///opt/spark/jars/gcs-connector-hadoop3-latest.jar"
+
   sparkConf:
-    # GCS connector 설정
-    "spark.hadoop.fs.gs.impl": com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem
-    "spark.hadoop.fs.AbstractFileSystem.gs.impl": com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS
-    "spark.hadoop.google.cloud.auth.service.account.enable": "true"
-    "spark.hadoop.google.cloud.auth.service.account.json.keyfile": "/mnt/secrets/key.json"
-  volumes:
-    - name: gcp-sa-key
-      secret:
-        secretName: gcp-sa-secret
+    # GCS Connector 설정 (Workload Identity는 keyfile 필요 없음)
+    "spark.hadoop.fs.gs.impl": "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem"
+    "spark.hadoop.fs.AbstractFileSystem.gs.impl": "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS"
+
   driver:
     cores: 1
     memory: 1024m
-    serviceAccount: spark-sa
-    volumeMounts:
-      - name: gcp-sa-key
-        mountPath: /mnt/secrets
-        readOnly: true
+    serviceAccount: pz-ksa 
+    labels:
+      version: 3.5.0
+    env:
+      - name: DB_HOST
+        value: "127.0.0.1"
+      - name: DB_PORT
+        value: "5432"
+    sidecars:
+      - name: cloud-sql-proxy
+        image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.17.0
+        args:
+          - "--structured-logs"
+          - "--port=5432"
+          - "--private-ip"
+          - "pz-project-473804:asia-northeast3:pz-db"
+        securityContext:
+          runAsNonRoot: true
+
   executor:
     cores: 2
     instances: 2
     memory: 2048m
-    volumeMounts:
-      - name: gcp-sa-key
-        mountPath: /mnt/secrets
-        readOnly: true
+    serviceAccount: pz-ksa
+

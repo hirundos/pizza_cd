@@ -42,6 +42,6 @@ spec:
           - "--structured-logs"
           - "--port=$(POSTGRES_PORT)"
           - "--private-ip"
-          - "kdt1-finalproject:asia-northeast3:pz-db"
+          - "pz-project-473804:asia-northeast3:pz-db"
         securityContext:
           runAsNonRoot: true
