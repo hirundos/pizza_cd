@@ -1,4 +1,4 @@
 image:
   repository: asia-northeast3-docker.pkg.dev/pz-project-473804/ay-repo/menu
-  tag: 20251003-1.0.2
+  tag: 20251011-1.0.3
   name: menu
