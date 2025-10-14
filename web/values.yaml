@@ -1,4 +1,4 @@
 web:
   image:
     repository: asia-northeast3-docker.pkg.dev/pz-project-473804/ay-repo/web
-    tag: "20251014-1.0.2"
+    tag: "20251014-1.0.3"
