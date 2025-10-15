@@ -1,4 +1,4 @@
 image:
   repository: asia-northeast3-docker.pkg.dev/pz-project-473804/ay-repo/order
-  tag: 20251014-1.0.7
+  tag: 20251015-1.0.8
   name: order
