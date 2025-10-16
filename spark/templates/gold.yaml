@@ -8,7 +8,7 @@ spec:
   mode: cluster
   image: asia-northeast3-docker.pkg.dev/pz-project-473804/ay-repo/gold:20251002-1.0.1
   imagePullPolicy: Always
-  mainApplicationFile: "local:///opt/spark/applications/gold_etl.py"
+  mainApplicationFile: "local:///opt/spark/applications/gold.py"
   sparkVersion: "3.5.0"
   restartPolicy:
     type: OnFailure

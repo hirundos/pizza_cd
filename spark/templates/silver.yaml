@@ -8,7 +8,7 @@ spec:
   mode: cluster
   image: asia-northeast3-docker.pkg.dev/pz-project-473804/ay-repo/silver:20251002-1.0.1
   imagePullPolicy: Always
-  mainApplicationFile: "local:///opt/spark/applications/silver_etl.py"
+  mainApplicationFile: "local:///opt/spark/applications/silver.py"
   sparkVersion: "3.5.0"
   restartPolicy:
     type: OnFailure

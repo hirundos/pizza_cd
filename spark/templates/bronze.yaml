@@ -9,7 +9,7 @@ spec:
   image: asia-northeast3-docker.pkg.dev/pz-project-473804/ay-repo/bronze:20251002-1.0.1
   imagePullPolicy: Always
   mainClass: com.example.BronzeJob
-  mainApplicationFile: "local:///opt/spark/applications/bronze-job.jar"
+  mainApplicationFile: "local:///opt/spark/applications/bronze.py"
   sparkVersion: "3.5.0"
   restartPolicy:
     type: OnFailure
