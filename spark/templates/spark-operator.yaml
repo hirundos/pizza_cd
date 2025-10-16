@@ -12,12 +12,12 @@ spec:
     helm:
       parameters:
         - name: sparkJobNamespace
-          value: "spark-jobs"   # SparkApplication CR이 올라갈 네임스페이스
+          value: "spark"   # SparkApplication CR이 올라갈 네임스페이스
         - name: webhook.enable
           value: "true"
   destination:
     server: https://kubernetes.default.svc
-    namespace: spark-operator
+    namespace: spark
   syncPolicy:
     automated:
       prune: true
