@@ -1,0 +1,44 @@
+# cloudsql-proxy.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudsql-proxy-deployment
+spec:
+  replicas: 1 
+  selector:
+    matchLabels:
+      app: cloudsql-proxy
+  template:
+    metadata:
+      labels:
+        app: cloudsql-proxy
+    spec:
+      serviceAccountName: pz-ksa 
+      containers:
+      - name: cloudsql-proxy
+        image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.17.0
+        args:
+          - "--structured-logs"
+          - "--port=5432" 
+          - "--private-ip"
+          - "pz-project-473804:asia-northeast3:pz-db"
+        ports:
+        - containerPort: 5432
+        securityContext:
+          runAsNonRoot: true
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloudsql-proxy-svc
+spec:
+  selector:
+    app: cloudsql-proxy
+  ports:
+  - protocol: TCP
+    port: 5432       
+    targetPort: 5432 

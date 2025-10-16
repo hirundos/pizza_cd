@@ -21,6 +21,9 @@ spec:
         envFrom:
           - secretRef:
               name: db-secret
+          env:
+          - name: DB_HOST
+            value: "cloudsql-proxy-svc"
         ports:
         - containerPort: 8000
         resources:
@@ -30,19 +33,3 @@ spec:
           limits:
             cpu: "1000m"
             memory: "1024Mi"
-              
-      - name: cloudsql-proxy
-        image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.17.0
-        env:
-        - name: POSTGRES_PORT
-          valueFrom:
-            secretKeyRef:
-              name: db-secret
-              key: POSTGRES_PORT
-        args:
-          - "--structured-logs"
-          - "--port=$(POSTGRES_PORT)"
-          - "--private-ip"
-          - "pz-project-473804:asia-northeast3:pz-db"
-        securityContext:
-          runAsNonRoot: true
