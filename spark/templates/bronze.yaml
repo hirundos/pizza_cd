@@ -22,7 +22,7 @@ spec:
       - "local:///opt/spark/jars/gcs-connector-hadoop3-latest.jar"
 
   sparkConf:
-    # GCS Connector 설정 (Workload Identity는 keyfile 필요 없음)
+    # GCS Connector 설정
     "spark.hadoop.fs.gs.impl": "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem"
     "spark.hadoop.fs.AbstractFileSystem.gs.impl": "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS"
 

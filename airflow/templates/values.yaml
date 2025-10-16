@@ -1,15 +1,14 @@
 # Airflow 기본 설정
 airflow:
-  executor: KubernetesExecutor   # Spark처럼 K8s 리소스 활용하려면 KubernetesExecutor 추천
+  executor: KubernetesExecutor   
   image:
     repository: apache/airflow
-    tag: 2.9.1-python3.10         # 원하는 버전 명시
-  fernetKey: "4x2oJqdoLwxaP-P4-d_yj4G8G0N-sZ7x4t_G-bE2hDc="                   # base64 key
-  secretKey: "9a9f2e3a8b4c7d6e5f1a3b9c8d7e6f2a5b1c4d0e9f8a7b6c"                   # Flask secret key
+    tag: 2.9.1-python3.10         
+  fernetKey: "4x2oJqdoLwxaP-P4-d_yj4G8G0N-sZ7x4t_G-bE2hDc="                  
+  secretKey: "9a9f2e3a8b4c7d6e5f1a3b9c8d7e6f2a5b1c4d0e9f8a7b6c"                  
   config:
     AIRFLOW__CORE__LOAD_EXAMPLES: "false"
 
-# DAGs GitSync 설정 (ArgoCD Repo 연동)
 dags:
   persistence:
     enabled: false
@@ -20,43 +19,26 @@ dags:
     subPath: "dags"
     revision: HEAD
     depth: 1
-    wait: 60   # 60초마다 sync
-
-# Webserver 설정
+    wait: 60 
 web:
   service:
     type: ClusterIP
     port: 8080
-
-# Scheduler 설정
 scheduler:
   replicas: 1
 
-# Worker (KubernetesExecutor 시 필요 없음, CeleryExecutor일 경우 사용)
-workers:
-  enabled: false
-
-# RBAC / ServiceAccount
-serviceAccount:
-  create: true
-  name: airflow-worker
-  annotations: {}
-
-# Logs (PVC 대신 GCS도 가능)
+# Logs 
 logs:
   persistence:
     enabled: true
     size: 10Gi
-
-# Airflow Connections & Variables (Secret으로 관리)
-# GCP, SparkOperator 연동에 필요하면 values에서 추가 가능
 env:
-  - name: AIRFLOW__KUBERNETES__NAMESPACE
+  - name: airflow
     value: airflow
   - name: AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION
     value: "false"
 
-# Resources (옵션)
+# Resources
 resources:
   requests:
     cpu: "500m"

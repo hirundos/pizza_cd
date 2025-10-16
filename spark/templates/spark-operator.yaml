@@ -4,7 +4,7 @@ metadata:
   name: spark-operator
   namespace: spark
 spec:
-  project: spark
+  project: defaul
   source:
     repoURL: https://googlecloudplatform.github.io/spark-on-k8s-operator
     chart: spark

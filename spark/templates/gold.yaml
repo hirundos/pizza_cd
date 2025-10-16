@@ -2,7 +2,7 @@ apiVersion: sparkoperator.k8s.io/v1beta2
 kind: SparkApplication
 metadata:
   name: gold-etl
-  namespace: spark   # 필요시 변경
+  namespace: spark  
 spec:
   type: Python
   mode: cluster
@@ -19,7 +19,7 @@ spec:
   driver:
     cores: 1
     memory: 1024m
-    serviceAccount: pz-ksa   # GCS + BigQuery 권한 있는 서비스어카운트
+    serviceAccount: pz-ksa   
     labels:
       version: 3.5.0
   executor:
