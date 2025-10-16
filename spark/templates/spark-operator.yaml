@@ -4,15 +4,15 @@ metadata:
   name: spark-operator
   namespace: spark
 spec:
-  project: default
+  project: spark
   source:
     repoURL: https://googlecloudplatform.github.io/spark-on-k8s-operator
-    chart: spark-operator
-    targetRevision: 1.1.27 # 최신 버전 확인 필요
+    chart: spark
+    targetRevision: 1.1.27 
     helm:
       parameters:
         - name: sparkJobNamespace
-          value: "spark"   # SparkApplication CR이 올라갈 네임스페이스
+          value: "spark"   
         - name: webhook.enable
           value: "true"
   destination:
