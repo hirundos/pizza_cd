@@ -12,15 +12,15 @@ default_args = {
 with DAG(
     dag_id="spark_etl_pipeline_k8s",
     default_args=default_args,
-    schedule_interval=None,  # 수동 실행
+    schedule_interval=None,
     catchup=False,
 ) as dag:
 
     bronze = KubernetesPodOperator(
         task_id="spark_bronze",
         name="spark-bronze",
-        namespace="airflow",  # airflow가 올라간 namespace
-        image="bitnami/kubectl:latest",  # kubectl이 있는 가벼운 이미지
+        namespace="airflow", 
+        image="bitnami/kubectl:latest", 
         cmds=["sh", "-c"],
         arguments=["kubectl apply -f /opt/airflow/dags/spark-apps/bronze.yaml"],
         get_logs=True,
