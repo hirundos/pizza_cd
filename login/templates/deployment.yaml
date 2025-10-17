@@ -12,7 +12,6 @@ spec:
       labels:
         app: login
     spec:
-      hostNetwork: true
       serviceAccountName: pz-ksa
       containers:
       - name: login
@@ -20,9 +19,6 @@ spec:
         envFrom:
           - secretRef:
               name: db-secret
-        env:
-        - name: DB_HOST
-          value: "cloudsql-proxy-svc"
         ports:
         - containerPort: 8000
         resources:

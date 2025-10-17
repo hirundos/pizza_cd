@@ -12,7 +12,6 @@ spec:
       labels:
         app: menu
     spec:
-      hostNetwork: true
       serviceAccountName: pz-ksa
       containers:
       - name: menu

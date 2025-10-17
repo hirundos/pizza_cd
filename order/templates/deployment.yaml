@@ -12,7 +12,6 @@ spec:
       labels:
         app: order
     spec:
-      hostNetwork: true
       serviceAccountName: pz-ksa
       dnsPolicy: ClusterFirstWithHostNet
       containers:
@@ -23,7 +22,7 @@ spec:
               name: db-secret
         env:
         - name: DB_HOST
-          value: "cloudsql-proxy-svc"
+          value: cloudsql-proxy-svc
         ports:
         - containerPort: 8000
         resources:
