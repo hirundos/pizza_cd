@@ -21,9 +21,9 @@ spec:
         envFrom:
           - secretRef:
               name: db-secret
-          env:
-          - name: DB_HOST
-            value: "cloudsql-proxy-svc"
+        env:
+        - name: DB_HOST
+          value: "cloudsql-proxy-svc"
         ports:
         - containerPort: 8000
         resources:
