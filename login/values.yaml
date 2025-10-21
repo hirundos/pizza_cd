@@ -1,4 +1,4 @@
 image:
-  tag: 20251017-1.0.10
+  tag: 20251021-1.0.11
   repository: asia-northeast3-docker.pkg.dev/pz-project-473804/ay-repo/login
   name: login
