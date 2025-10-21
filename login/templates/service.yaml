@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: login-service
   annotations:
-    beta.cloud.google.com/backend-config: '{"ports": {"8000":"login-backend-config"}}'
+    beta.cloud.google.com/backend-config: '{"ports": {"8000":"django-backend-config"}}'
     cloud.google.com/neg: '{"ingress": true}'
 spec:
   type: NodePort 
