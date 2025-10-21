@@ -2,8 +2,9 @@ apiVersion: v1
 kind: Service
 metadata:
   name: order-service
-  labels:
-    app: order
+  annotations:
+    beta.cloud.google.com/backend-config: '{"ports": {"8000":"django-backend-config"}}'
+    cloud.google.com/neg: '{"ingress": true}'
 spec:
   selector:
     app: order
