@@ -3,6 +3,8 @@ kind: SparkApplication
 metadata:
   name: gold-etl
   namespace: spark  
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   type: Python
   mode: cluster
