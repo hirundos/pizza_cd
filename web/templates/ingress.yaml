@@ -4,6 +4,7 @@ metadata:
   name: backend-ingress
   annotations:
     kubernetes.io/ingress.class: "gce" 
+    networking.gke.io/managed-certificates: "hirundos-store-cert"
 spec:
   rules:
     - host: hirundos.store
