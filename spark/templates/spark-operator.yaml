@@ -4,7 +4,7 @@ metadata:
   name: spark-operator
   namespace: spark
 spec:
-  project: defaul
+  project: default
   source:
     repoURL: https://googlecloudplatform.github.io/spark-on-k8s-operator
     chart: spark
@@ -14,7 +14,7 @@ spec:
         - name: sparkJobNamespace
           value: "spark"   
         - name: webhook.enable
-          value: "true"
+          value: true
   destination:
     server: https://kubernetes.default.svc
     namespace: spark
@@ -22,3 +22,6 @@ spec:
     automated:
       prune: true
       selfHeal: true
+    syncOptions: 
+      - ServerSideApply=true
+      - CreateNamespace=true
