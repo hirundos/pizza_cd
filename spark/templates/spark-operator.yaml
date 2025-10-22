@@ -2,24 +2,22 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: spark-operator
-  namespace: argocd
+  namespace: spark-operator
 spec:
   project: default
   source:
-    # 1. [변경] 공식 문서의 새 저장소 주소
     repoURL: https://kubeflow.github.io/spark-operator
     chart: spark-operator
     targetRevision: 2.2.1
     helm:
       parameters:
         - name: sparkJobNamespace
-          value: "spark"   
+          value: "default"   
         - name: webhook.enable
           value: "true"
   destination:
     server: https://kubernetes.default.svc
     namespace: spark-operator
-
   syncPolicy:
     automated:
       prune: true

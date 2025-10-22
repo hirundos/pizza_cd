@@ -2,7 +2,7 @@ apiVersion: sparkoperator.k8s.io/v1beta2
 kind: SparkApplication
 metadata:
   name: bronze-etl
-  namespace: spark
+  namespace: default
   annotations:
     argocd.argoproj.io/sync-wave: "1"
 spec:
@@ -39,16 +39,6 @@ spec:
         value: "127.0.0.1"
       - name: DB_PORT
         value: "5432"
-    sidecars:
-      - name: cloud-sql-proxy
-        image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.17.0
-        args:
-          - "--structured-logs"
-          - "--port=5432"
-          - "--private-ip"
-          - "pz-project-473804:asia-northeast3:pz-db"
-        securityContext:
-          runAsNonRoot: true
 
   executor:
     cores: 2
