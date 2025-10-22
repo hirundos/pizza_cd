@@ -14,7 +14,7 @@ spec:
         - name: sparkJobNamespace
           value: "spark"   
         - name: webhook.enable
-          value: true
+          value: "true"
   destination:
     server: https://kubernetes.default.svc
     namespace: spark
