@@ -8,9 +8,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://googlecloudplatform.github.io/spark-on-k8s-operator
+    repoURL: https://github.com/kubeflow/spark-operator
     chart: spark
-    targetRevision: 1.1.27 
+    targetRevision: 0.2.3
     helm:
       parameters:
         - name: sparkJobNamespace
