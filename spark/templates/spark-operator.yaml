@@ -25,3 +25,8 @@ spec:
     syncOptions:     
       - ServerSideApply=true
       - CreateNamespace=true
+  driver:
+    failurePolicy:
+      type: Fail
+  restartPolicy:
+    type: Never
