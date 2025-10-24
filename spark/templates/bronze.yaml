@@ -6,12 +6,11 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "1"
 spec:
-  type: Scala
+  type: Python
   mode: cluster
-  image: asia-northeast3-docker.pkg.dev/pz-project-473804/ay-repo/bronze:20251002-1.0.1
+  image: asia-northeast3-docker.pkg.dev/pz-project-473804/ay-repo/bronze:20251024-1.0.2
   imagePullPolicy: Always
-  mainClass: com.example.BronzeJob
-  mainApplicationFile: "local:///opt/spark/applications/bronze.py"
+  mainApplicationFile: "local:///opt/spark/work-dir/applications/bronze.py"
   sparkVersion: "3.5.0"
   restartPolicy:
     type: OnFailure
@@ -21,7 +20,7 @@ spec:
     onSubmissionFailureRetryInterval: 20
   deps:
     jars:
-      - "local:///opt/spark/jars/gcs-connector-hadoop3-latest.jar"
+      - "local:///opt/spark/work-dir/jars/gcs-connector-hadoop3-latest.jar"
 
   sparkConf:
     # GCS Connector 설정
