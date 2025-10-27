@@ -29,6 +29,7 @@ spec:
     "spark.hadoop.fs.AbstractFileSystem.gs.impl": "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS"
     "spark.sql.extensions": "io.delta.sql.DeltaSparkSessionExtension"
     "spark.sql.catalog.spark_catalog": "org.apache.spark.sql.delta.catalog.DeltaCatalog"
+    "spark.hadoop.google.cloud.auth.type": "APPLICATION_DEFAULT"
     "temporaryGcsBucket": "pz-buck-888" 
     "parentProject": "pz-project-473804"
   driver:

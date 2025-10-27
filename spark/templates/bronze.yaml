@@ -38,7 +38,7 @@ spec:
       version: 3.5.6
     env:
       - name: DB_HOST
-        value: "127.0.0.1"
+        value: "cloudsql-proxy-svc"
       - name: DB_PORT
         value: "5432"
 
