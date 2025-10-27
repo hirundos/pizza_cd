@@ -30,6 +30,7 @@ spec:
     "spark.sql.extensions": "io.delta.sql.DeltaSparkSessionExtension"
     "spark.sql.catalog.spark_catalog": "org.apache.spark.sql.delta.catalog.DeltaCatalog"
     "spark.hadoop.google.cloud.auth.type": "APPLICATION_DEFAULT"
+    "spark.hadoop.google.cloud.auth.service.account.json.keyfile": ""
   driver:
     cores: 1
     memory: 1024m
