@@ -21,12 +21,12 @@ spec:
   deps:
     jars:
       - "local:///opt/spark/work-dir/jars/gcs-connector-hadoop3-latest.jar"
-
+      - "local:///opt/spark/work-dir/jars/delta-spark_2.12-3.2.1.jar"
   sparkConf:
-    # GCS Connector 설정
     "spark.hadoop.fs.gs.impl": "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem"
     "spark.hadoop.fs.AbstractFileSystem.gs.impl": "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS"
-
+    "spark.sql.extensions": "io.delta.sql.DeltaSparkSessionExtension"
+    "spark.sql.catalog.spark_catalog": "org.apache.spark.sql.delta.catalog.DeltaCatalog"
   driver:
     cores: 1
     memory: 1024m
