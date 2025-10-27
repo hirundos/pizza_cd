@@ -8,7 +8,7 @@ metadata:
 spec:
   type: Python
   mode: cluster
-  image: asia-northeast3-docker.pkg.dev/pz-project-473804/ay-repo/silver:20251024-1.0.2
+  image: asia-northeast3-docker.pkg.dev/pz-project-473804/ay-repo/silver:20251026-1.0.3
   imagePullPolicy: Always
   mainApplicationFile: "local:///opt/spark/work-dir/applications/silver.py"
   sparkVersion: "3.5.0"
