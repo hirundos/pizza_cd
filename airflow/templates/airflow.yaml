@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: 'https://airflow-helm.github.io/charts'
     chart: airflow
-    targetRevision: 2.10.5
+    targetRevision: 8.9.0
     helm:
       values: |
         image:
