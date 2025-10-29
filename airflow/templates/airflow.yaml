@@ -1,22 +1,49 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: airflow
-  namespace: airflow
+  name: pizza-airflow
+  namespace: argocd
 spec:
   project: default
+
   source:
-    repoURL: 'https://airflow-helm.github.io/charts'
+    repoURL: https://airflow-helm.github.io/charts
     chart: airflow
-    targetRevision: 8.9.0
+    targetRevision: 8.8.0
     helm:
       values: |
-        image:
-          repository: apache/airflow
-          tag: 2.8.4-python3.10
-        executor: KubernetesExecutor
-        fernetKey: "4x2oJqdoLwxaP-P4-d_yj4G8G0N-sZ7x4t_G-bE2hDc="
-        webserverSecretKey: "9a9f2e3a8b4c7d6e5f1a3b9c8d7e6f2a5b1c4d0e9f8a7b6c"
+        airflow:
+          image:
+            repository: apache/airflow
+            tag: 2.6.3-python3.9
+          executor: KubernetesExecutor
+          config:
+            core:
+              load_examples: "False"
+        web:
+          service:
+            type: ClusterIP
+            port: 8080
+          defaultUser:
+            enabled: true
+            role: Admin
+            username: admin
+            password: admin
+            email: admin@example.com
+            firstName: Air
+            lastName: Flow
+          readinessProbe:
+            enabled: true
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+            path: /health
+            scheme: HTTP
+            port: 8080
+
+        scheduler:
+          replicas: 1
 
         dags:
           persistence:
@@ -29,62 +56,33 @@ spec:
             revision: HEAD
             depth: 1
             wait: 60
-        logs:
-          persistence:
-            enabled: true
-            size: 10Gi
-        config:
-          AIRFLOW__CORE__LOAD_EXAMPLES: "false"
-          AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "false"
-        scheduler:
-          resources:
-            requests:
-              cpu: "500m"
-              memory: "1Gi"
-            limits:
-              cpu: "1"
-              memory: "2Gi"
-        web:
-          replicas: 1
-          resources:
-            requests:
-              cpu: "500m"
-              memory: "1Gi"
-            limits:
-              cpu: "1"
-              memory: "2Gi"
-        
-        triggerer:
+
+        externalDatabase:
           enabled: true
-          resources:
-            requests:
-              cpu: "500m"
-              memory: "1Gi"
-            limits:
-              cpu: "1"
-              memory: "2Gi"
+          host: cloudsql-proxy-svc.default
+          port: 5432
+          user: my_user
+          database: postgres
+          password: 1234
+          
         postgresql:
           enabled: false
-        pgbouncer:
-            enabled: false
+        redis:
+          enabled: false
         workers:
           enabled: false
         flower:
           enabled: false
-
-        externalDatabase:
-          type: postgresql
-          host: cloudsql-proxy-svc.default
-          port: 5432
-          database: pz-db
-          secretName: airflow-db-secret
-          userKey: POSTGRES_USER
-          passwordKey: POSTGRES_PASSWORD
+        pgbouncer:
+          enabled: false
 
   destination:
     server: https://kubernetes.default.svc
     namespace: airflow
+
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
