@@ -8,7 +8,7 @@ metadata:
 spec:
   type: Python
   mode: cluster
-  image: asia-northeast3-docker.pkg.dev/pz-project-473804/ay-repo/spark-base:20251029-1.0.12
+  image: asia-northeast3-docker.pkg.dev/pz-project-473804/ay-repo/spark-base:20251029-1.0.13
   imagePullPolicy: Always
   mainApplicationFile: "local:///opt/spark/work-dir/applications/gold.py"
   sparkVersion: "3.5.6"
