@@ -8,14 +8,13 @@ spec:
   source:
     repoURL: 'https://airflow-helm.github.io/charts'
     chart: airflow
-    targetRevision: 2.10.5 
+    targetRevision: 2.10.5
     helm:
       values: |
         image:
           repository: apache/airflow
           tag: 2.9.1-python3.10
         executor: KubernetesExecutor
-
         fernetKey: "4x2oJqdoLwxaP-P4-d_yj4G8G0N-sZ7x4t_G-bE2hDc="
         webserverSecretKey: "9a9f2e3a8b4c7d6e5f1a3b9c8d7e6f2a5b1c4d0e9f8a7b6c"
 
@@ -37,7 +36,6 @@ spec:
         config:
           AIRFLOW__CORE__LOAD_EXAMPLES: "false"
           AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "false"
-
         scheduler:
           resources:
             requests:
@@ -55,6 +53,7 @@ spec:
             limits:
               cpu: "1"
               memory: "2Gi"
+        
         triggerer:
           enabled: true
           resources:
@@ -64,7 +63,6 @@ spec:
             limits:
               cpu: "1"
               memory: "2Gi"
-
         postgresql:
           enabled: false
         pgbouncer:
@@ -73,7 +71,7 @@ spec:
           enabled: false
         flower:
           enabled: false
-        
+
         externalDatabase:
           type: postgresql
           host: cloudsql-proxy-svc.default
