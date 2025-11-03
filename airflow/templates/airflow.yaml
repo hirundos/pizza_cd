@@ -65,7 +65,6 @@ spec:
           user: my_user
           database: pizza
           existingSecret: airflow-db-secret
-          existingSecretKey: POSTGRES_PASSWORD
 
         postgresql:
           enabled: false
