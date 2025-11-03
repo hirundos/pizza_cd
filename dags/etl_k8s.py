@@ -1,10 +1,12 @@
 from airflow import DAG
+from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
 from datetime import datetime
-from airflow.providers.apache.spark.operators.spark_kubernetes import SparkKubernetesOperator
 
 default_args = {
     "owner": "airflow",
+    "depends_on_past": False,
     "start_date": datetime(2025, 1, 1),
+    "retries": 1,
 }
 
 with DAG(
@@ -14,29 +16,34 @@ with DAG(
     catchup=False,
 ) as dag:
 
-    bronze_yaml_path = "spark-apps/bronze.yaml" 
-    silver_yaml_path = "spark-apps/silver.yaml"
-    gold_yaml_path = "spark-apps/gold.yaml"
-
-    bronze = SparkKubernetesOperator(
+    bronze = KubernetesPodOperator(
         task_id="spark_bronze",
+        name="spark-bronze",
         namespace="airflow", 
-        application_file=bronze_yaml_path, 
-        do_xcom_push=True, 
+        image="bitnami/kubectl:latest", 
+        cmds=["sh", "-c"],
+        arguments=["kubectl apply -f /opt/dags/bronze.yaml"],
+        get_logs=True,
     )
 
-    silver = SparkKubernetesOperator(
+    silver = KubernetesPodOperator(
         task_id="spark_silver",
+        name="spark-silver",
         namespace="airflow",
-        application_file=silver_yaml_path,
-        do_xcom_push=True,
+        image="bitnami/kubectl:latest",
+        cmds=["sh", "-c"],
+        arguments=["kubectl apply -f /opt/dags/silver.yaml"],
+        get_logs=True,
     )
 
-    gold = SparkKubernetesOperator(
+    gold = KubernetesPodOperator(
         task_id="spark_gold",
+        name="spark-gold",
         namespace="airflow",
-        application_file=gold_yaml_path,
-        do_xcom_push=True,
+        image="bitnami/kubectl:latest",
+        cmds=["sh", "-c"],
+        arguments=["kubectl apply -f /opt/dags/gold.yaml"],
+        get_logs=True,
     )
 
     bronze >> silver >> gold

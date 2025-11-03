@@ -12,8 +12,6 @@ spec:
     targetRevision: 8.8.0
     helm:
       values: |
-        pipPackages:
-          - apache-airflow-providers-apache-spark
         airflow:
           image:
             repository: apache/airflow
