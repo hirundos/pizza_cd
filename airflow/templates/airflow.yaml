@@ -59,9 +59,13 @@ spec:
 
         externalDatabase:
           enabled: true
+          type: postgres
           host: cloudsql-proxy-svc.default
-          existingSecret: airflow-db-secret
-          connectionSecretKey: connection
+          port: 5432
+          user: my_user
+          database: pizza
+          secretName: airflow-db-secret
+          passwordKey: POSTGRES_PASSWORD
 
         postgresql:
           enabled: false
