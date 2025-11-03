@@ -22,7 +22,7 @@ with DAG(
         namespace="airflow", 
         image="bitnami/kubectl:latest", 
         cmds=["sh", "-c"],
-        arguments=["kubectl apply -f /opt/dags/bronze.yaml"],
+        arguments=["kubectl apply -f /opt/dags/spark-apps/bronze.yaml"],
         get_logs=True,
     )
 
@@ -32,7 +32,7 @@ with DAG(
         namespace="airflow",
         image="bitnami/kubectl:latest",
         cmds=["sh", "-c"],
-        arguments=["kubectl apply -f /opt/dags/silver.yaml"],
+        arguments=["kubectl apply -f /opt/dags/spark-apps/silver.yaml"],
         get_logs=True,
     )
 
@@ -42,7 +42,7 @@ with DAG(
         namespace="airflow",
         image="bitnami/kubectl:latest",
         cmds=["sh", "-c"],
-        arguments=["kubectl apply -f /opt/dags/gold.yaml"],
+        arguments=["kubectl apply -f /opt/dags/spark-apps/gold.yaml"],
         get_logs=True,
     )
 
