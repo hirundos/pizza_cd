@@ -24,6 +24,7 @@ with DAG(
         cmds=["sh", "-c"],
         arguments=["kubectl apply -f /opt/dags/spark-apps/bronze.yaml"],
         get_logs=True,
+        service_account_name="spark-app-runner",
     )
 
     silver = KubernetesPodOperator(
@@ -34,6 +35,7 @@ with DAG(
         cmds=["sh", "-c"],
         arguments=["kubectl apply -f /opt/dags/spark-apps/silver.yaml"],
         get_logs=True,
+        service_account_name="spark-app-runner",
     )
 
     gold = KubernetesPodOperator(
@@ -44,6 +46,7 @@ with DAG(
         cmds=["sh", "-c"],
         arguments=["kubectl apply -f /opt/dags/spark-apps/gold.yaml"],
         get_logs=True,
+        service_account_name="spark-app-runner",
     )
 
     bronze >> silver >> gold

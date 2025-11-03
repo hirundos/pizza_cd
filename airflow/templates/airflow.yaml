@@ -23,7 +23,6 @@ spec:
             logging:
               remote_logging: "True"
               remote_base_log_folder: "gs://pz-buck-888/logs" 
-              remote_log_conn_id: "pz-ksa"
               encrypt_s3_logs: "False"
 
         web:
@@ -81,6 +80,9 @@ spec:
           enabled: false
         pgbouncer:
           enabled: false
+        kubernetes:
+          worker_pods:
+            dnsPolicy: "ClusterFirst"
 
   destination:
     server: https://kubernetes.default.svc
