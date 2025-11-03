@@ -17,16 +17,9 @@ spec:
             repository: apache/airflow
             tag: 2.6.3-python3.9
           executor: KubernetesExecutor
-          
-          envFrom:
-            - secretRef:
-                name: airflow-db-secret
-                
           config:
             core:
               load_examples: "False"
-              sql_alchemy_conn: postgresql+psycopg2://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DB)
-              
         web:
           service:
             type: ClusterIP
@@ -64,9 +57,15 @@ spec:
             depth: 1
             wait: 60
 
-        # 3. externalDatabase.enabled를 true로 변경
         externalDatabase:
           enabled: true
+          host: cloudsql-proxy-svc.default
+          connectionSecretKey: connection
+          port: 5432
+          user: my_user
+          database: postgres
+          passwordSecretName: "airflow-db-secret"
+          passwordSecretKey: "POSTGRES_PASSWORD"
           
         postgresql:
           enabled: false
