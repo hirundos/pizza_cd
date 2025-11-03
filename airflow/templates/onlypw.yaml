@@ -1,0 +1,11 @@
+# secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: airflow-db-password-only
+  # [핵심] Airflow가 설치될 네임스페이스와 동일해야 합니다.
+  namespace: airflow
+type: Opaque
+data:
+  # 'password' 라는 key에 '1234' (MTIzNA==) 값을 저장
+  password: MTIzNA==
