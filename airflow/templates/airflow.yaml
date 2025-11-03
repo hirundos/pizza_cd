@@ -64,8 +64,8 @@ spec:
           port: 5432
           user: my_user
           database: pizza
-          secretName: airflow-db-secret
-          passwordKey: POSTGRES_PASSWORD
+          existingSecret: airflow-db-secret
+          existingSecretKey: POSTGRES_PASSWORD
 
         postgresql:
           enabled: false
