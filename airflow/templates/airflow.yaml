@@ -58,14 +58,7 @@ spec:
             wait: 60
 
         externalDatabase:
-          enabled: true
-          type: postgres
-          host: cloudsql-proxy-svc.default
-          port: 5432
-          user: my_user
-          database: pizza
-          existingSecret: airflow-db-secret
-
+          enabled: false
         postgresql:
           enabled: false
         redis:
@@ -76,6 +69,10 @@ spec:
           enabled: false
         pgbouncer:
           enabled: false
+
+        envFrom:
+          - secretRef:
+              name: airflow-db-secret
 
   destination:
     server: https://kubernetes.default.svc
