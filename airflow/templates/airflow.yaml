@@ -20,6 +20,11 @@ spec:
           config:
             core:
               load_examples: "False"
+            logging:
+              remote_logging: "True"
+              remote_base_log_folder: "gs://pz-buck-888/logs" 
+              remote_log_conn_id: "pz-ksa"
+              encrypt_s3_logs: "False"
         web:
           service:
             type: LoadBalancer
