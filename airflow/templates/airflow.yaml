@@ -22,7 +22,7 @@ spec:
               load_examples: "False"
         web:
           service:
-            type: ClusterIP
+            type: LoadBalancer
             port: 8080
           defaultUser:
             enabled: true
