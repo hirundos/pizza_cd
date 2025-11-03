@@ -12,6 +12,8 @@ spec:
     targetRevision: 8.8.0
     helm:
       values: |
+        pipPackages:
+          - apache-airflow-providers-apache-spark
         airflow:
           image:
             repository: apache/airflow
@@ -25,8 +27,7 @@ spec:
               remote_base_log_folder: "gs://pz-buck-888/logs" 
               remote_log_conn_id: "pz-ksa"
               encrypt_s3_logs: "False"
-        pipPackages:
-          - apache-airflow-providers-apache-spark
+
         web:
           service:
             type: LoadBalancer
