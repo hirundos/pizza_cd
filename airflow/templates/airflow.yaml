@@ -60,11 +60,9 @@ spec:
         externalDatabase:
           enabled: true
           host: cloudsql-proxy-svc.default
-          port: 5432
-          user: my_user
-          database: postgres
-          password: 1234
-          
+          existingSecret: airflow-db-secret
+          connectionSecretKey: connection
+
         postgresql:
           enabled: false
         redis:
