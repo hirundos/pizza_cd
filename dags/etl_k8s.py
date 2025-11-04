@@ -1,5 +1,6 @@
 from airflow import DAG
 from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
+from kubernetes.client import models as k8s
 from datetime import datetime
 
 default_args = {
@@ -9,18 +10,37 @@ default_args = {
     "retries": 1,
 }
 
+k8s_volume = k8s.V1Volume(
+    name='git-sync-volume', 
+    empty_dir=k8s.V1EmptyDirVolumeSource()
+)
+
+k8s_volume_mount = k8s.V1VolumeMount(
+    name='git-sync-volume',    
+    mount_path='/opt/dags'  
+)
+
+
+git_sync_init_container = k8s.V1Container(
+    name='git-sync',
+    image='k8s.gcr.io/git-sync/git-sync:v3.6.3', 
+    volume_mounts=[k8s_volume_mount],          
+    env=[
+        k8s.V1EnvVar(name='GIT_SYNC_REPO', value='https://github.com/hirundos/pizza_cd.git'),
+        k8s.V1EnvVar(name='GIT_SYNC_BRANCH', value='main'),
+        k8s.V1EnvVar(name='GIT_SYNC_ROOT', value='/opt/dags'), 
+        k8s.V1EnvVar(name='GIT_SYNC_DEST', value='.'),         
+        k8s.V1EnvVar(name='GIT_SYNC_SUBPATH', value='dags'),   
+        k8s.V1EnvVar(name='GIT_SYNC_ONE_TIME', value='true')   
+    ]
+)
+
 with DAG(
     dag_id="spark_etl_pipeline_k8s",
     default_args=default_args,
     schedule_interval=None,
     catchup=False,
 ) as dag:
-
-
-    GIT_REPO = "https://github.com/hirundos/pizza_cd.git"
-    GIT_BRANCH = "main"
-    GIT_SUBPATH = "dags" 
-    MOUNT_PATH = "/opt/dags"
 
     bronze = KubernetesPodOperator(
         task_id="spark_bronze",
@@ -30,11 +50,14 @@ with DAG(
         cmds=["sh", "-c"],
         arguments=["kubectl apply -f /opt/dags/spark-apps/bronze.yaml"],
         get_logs=True,
+        is_delete_operator_pod=True, 
         service_account_name="spark-app-runner",
-        git_sync_repo=GIT_REPO,
-        git_sync_branch=GIT_BRANCH,
-        git_sync_subpath=GIT_SUBPATH,
-        git_sync_mount_path=MOUNT_PATH
+        
+        init_containers=[git_sync_init_container],
+        
+        volumes=[k8s_volume],
+        
+        volume_mounts=[k8s_volume_mount]
     )
 
     silver = KubernetesPodOperator(
@@ -45,11 +68,12 @@ with DAG(
         cmds=["sh", "-c"],
         arguments=["kubectl apply -f /opt/dags/spark-apps/silver.yaml"],
         get_logs=True,
+        is_delete_operator_pod=True,
         service_account_name="spark-app-runner",
-        git_sync_repo=GIT_REPO,
-        git_sync_branch=GIT_BRANCH,
-        git_sync_subpath=GIT_SUBPATH,
-        git_sync_mount_path=MOUNT_PATH
+        
+        init_containers=[git_sync_init_container],
+        volumes=[k8s_volume],
+        volume_mounts=[k8s_volume_mount]
     )
 
     gold = KubernetesPodOperator(
@@ -60,11 +84,11 @@ with DAG(
         cmds=["sh", "-c"],
         arguments=["kubectl apply -f /opt/dags/spark-apps/gold.yaml"],
         get_logs=True,
-        service_account_name="spark-app-runner", 
-        git_sync_repo=GIT_REPO,
-        git_sync_branch=GIT_BRANCH,
-        git_sync_subpath=GIT_SUBPATH,
-        git_sync_mount_path=MOUNT_PATH
+        is_delete_operator_pod=True,
+        service_account_name="spark-app-runner",
+        init_containers=[git_sync_init_container],
+        volumes=[k8s_volume],
+        volume_mounts=[k8s_volume_mount]
     )
 
     bronze >> silver >> gold
