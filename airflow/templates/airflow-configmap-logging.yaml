@@ -2,6 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: airflow-logging-config
+  namespace: airflow
   labels:
     app: airflow
 data:
@@ -11,22 +12,24 @@ data:
 
     LOGGING_CONFIG = deepcopy(DEFAULT_LOGGING_CONFIG)
 
-    # ✅ Formatter 보장
-    if "airflow.task" not in LOGGING_CONFIG["formatters"]:
-        LOGGING_CONFIG["formatters"]["airflow.task"] = {
+    # 보장: 'airflow.task' formatter 존재
+    if "airflow.task" not in LOGGING_CONFIG.get("formatters", {}):
+        LOGGING_CONFIG.setdefault("formatters", {})["airflow.task"] = {
             "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
             "datefmt": "%Y-%m-%d %H:%M:%S",
         }
 
-    # ✅ GCS 핸들러 추가
+    # GCS 핸들러 추가 (Helm이 {{ ... }} 를 건드리지 않게 이스케이프 처리)
     LOGGING_CONFIG["handlers"]["gcs.task"] = {
         "class": "airflow.providers.google.cloud.log.gcs_task_handler.GCSTaskHandler",
         "formatter": "airflow.task",
         "base_log_folder": "/opt/airflow/logs",
-        "gcs_log_folder": "gs://YOUR_BUCKET_NAME/airflow-logs",
+        "gcs_log_folder": "gs://pz-buck-888/logs",
         "gcp_key_path": None,
+        # 안전한 Helm-이스케이프: Helm이 이중 중괄호 안을 문자열로 취급하게 함
         "filename_template": "{{ \"{{ ti.dag_id }}\" }}/{{ \"{{ ti.task_id }}\" }}/{{ \"{{ ts }}\" }}/{{ \"{{ try_number }}\" }}.log",
     }
 
-    # ✅ logger 연결
+    # airflow.task logger에 핸들러 연결
+    LOGGING_CONFIG["loggers"].setdefault("airflow.task", {})
     LOGGING_CONFIG["loggers"]["airflow.task"]["handlers"] = ["gcs.task"]
