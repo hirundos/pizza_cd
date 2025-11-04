@@ -7,16 +7,26 @@ metadata:
 data:
   airflow_local_settings.py: |
     from airflow.config_templates.airflow_local_settings import DEFAULT_LOGGING_CONFIG
+    from copy import deepcopy
 
-    LOGGING_CONFIG = DEFAULT_LOGGING_CONFIG
+    LOGGING_CONFIG = deepcopy(DEFAULT_LOGGING_CONFIG)
 
+    # ✅ Formatter 보장
+    if "airflow.task" not in LOGGING_CONFIG["formatters"]:
+        LOGGING_CONFIG["formatters"]["airflow.task"] = {
+            "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+            "datefmt": "%Y-%m-%d %H:%M:%S",
+        }
+
+    # ✅ GCS 핸들러 추가
     LOGGING_CONFIG["handlers"]["gcs.task"] = {
         "class": "airflow.providers.google.cloud.log.gcs_task_handler.GCSTaskHandler",
         "formatter": "airflow.task",
         "base_log_folder": "/opt/airflow/logs",
         "gcs_log_folder": "gs://YOUR_BUCKET_NAME/airflow-logs",
         "gcp_key_path": None,
-        "filename_template": "{{ "{{ ti.dag_id }}" }}/{{ "{{ ti.task_id }}" }}/{{ "{{ ts }}" }}/{{ "{{ try_number }}" }}.log",
+        "filename_template": "{{ \"{{ ti.dag_id }}\" }}/{{ \"{{ ti.task_id }}\" }}/{{ \"{{ ts }}\" }}/{{ \"{{ try_number }}\" }}.log",
     }
 
+    # ✅ logger 연결
     LOGGING_CONFIG["loggers"]["airflow.task"]["handlers"] = ["gcs.task"]
