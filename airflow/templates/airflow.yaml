@@ -12,11 +12,10 @@ spec:
     targetRevision: 8.8.0
     helm:
       values: |
-        airflow:
-          image:
-            repository: apache/airflow
-            tag: 2.7.3-python3.10
-          executor: KubernetesExecutor
+        image:
+          repository: apache/airflow
+          tag: 2.7.3-python3.10
+        executor: KubernetesExecutor
           
         config:
           core:
