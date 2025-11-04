@@ -17,15 +17,21 @@ spec:
             repository: apache/airflow
             tag: 2.7.3-python3.10
           executor: KubernetesExecutor
+          config:
+            AIRFLOW__LOGGING__REMOTE_LOGGING: "True"
+            AIRFLOW__LOGGING__REMOTE_BASE_LOG_FOLDER: "gs://pz-buck-888/logs"
+            AIRFLOW__LOGGING__REMOTE_LOG_CONN_ID: "google_cloud_default"
+            AIRFLOW__LOGGING__TASK_LOG_READER: "gcs.task"
+            AIRFLOW__LOGGING__LOGGING_CONFIG_CLASS: "airflow_local_settings.LOGGING_CONFIG"
 
           extraVolumes:
-            - name: airflow-config
+            - name: airflow-logging-config
               configMap:
                 name: airflow-logging-config
           extraVolumeMounts:
-            - name: airflow-config
-              mountPath: /opt/airflow/airflow.cfg
-              subPath: airflow.cfg
+            - name: airflow-logging-config
+              mountPath: /opt/airflow/config/airflow_local_settings.py
+              subPath: airflow_local_settings.py
 
         web:
           service:
