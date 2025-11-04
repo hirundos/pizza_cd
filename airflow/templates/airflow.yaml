@@ -21,7 +21,7 @@ spec:
         config:
           core:
             load_examples: "False"
-          kubernetes:
+          kubernetes_executor:
             delete_worker_pods: "False"
             delete_worker_pods_on_failure: "False"
             enable_tcp_keepalive: "False" 
