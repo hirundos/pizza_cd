@@ -54,9 +54,7 @@ with DAG(
         service_account_name="spark-app-runner",
         
         init_containers=[git_sync_init_container],
-        
         volumes=[k8s_volume],
-        
         volume_mounts=[k8s_volume_mount]
     )
 
