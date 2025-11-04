@@ -55,6 +55,7 @@ spec:
             repo: "https://github.com/hirundos/pizza_cd.git"
             branch: main
             subPath: "dags"
+            dest: "."
             revision: HEAD
             depth: 1
             wait: 60
