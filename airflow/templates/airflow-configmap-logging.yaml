@@ -10,15 +10,13 @@ data:
 
     LOGGING_CONFIG = DEFAULT_LOGGING_CONFIG
 
-    # GCS 핸들러 추가
     LOGGING_CONFIG["handlers"]["gcs.task"] = {
         "class": "airflow.providers.google.cloud.log.gcs_task_handler.GCSTaskHandler",
         "formatter": "airflow.task",
         "base_log_folder": "/opt/airflow/logs",
-        "gcs_log_folder": "gs://pz-buck-888/logs",
+        "gcs_log_folder": "gs://YOUR_BUCKET_NAME/airflow-logs",
         "gcp_key_path": None,
-        "filename_template": "{{ ti.dag_id }}/{{ ti.task_id }}/{{ ts }}/{{ try_number }}.log",
+        "filename_template": "{{ "{{ ti.dag_id }}" }}/{{ "{{ ti.task_id }}" }}/{{ "{{ ts }}" }}/{{ "{{ try_number }}" }}.log",
     }
 
-    # Airflow task logger에 gcs.task 핸들러를 연결
     LOGGING_CONFIG["loggers"]["airflow.task"]["handlers"] = ["gcs.task"]
