@@ -17,7 +17,15 @@ spec:
             repository: apache/airflow
             tag: 2.7.3-python3.10
           executor: KubernetesExecutor
-          configMapName: airflow-logging-config
+
+          extraVolumes:
+            - name: airflow-config
+              configMap:
+                name: airflow-logging-config
+          extraVolumeMounts:
+            - name: airflow-config
+              mountPath: /opt/airflow/airflow.cfg
+              subPath: airflow.cfg
 
         web:
           service:
