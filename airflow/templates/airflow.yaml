@@ -17,24 +17,25 @@ spec:
             repository: apache/airflow
             tag: 2.7.3-python3.10
           executor: KubernetesExecutor
-          config:
-            core:
-              load_examples: "False"
-              remote_logging: "True"
-              remote_base_log_folder: "gs://pz-buck-888/logs" 
-              remote_log_conn_id: "google_cloud_default"
-              task_log_reader: "remote"
-            kubernetes:
-              delete_worker_pods: "False"
-              delete_worker_pods_on_failure: "False"
-              enable_tcp_keepalive: "False" 
-              pod_template_file: "" 
-              fetch_logs_from_worker: "False"
-              worker_container_repository: "apache/airflow"
-              worker_container_tag: "2.7.3-python3.10"
-              enable_kubernetes_executor_logs: "False"
-            logging:
-              encrypt_s3_logs: "False"
+          
+        config:
+          core:
+            load_examples: "False"
+          kubernetes:
+            delete_worker_pods: "False"
+            delete_worker_pods_on_failure: "False"
+            enable_tcp_keepalive: "False" 
+            pod_template_file: "" 
+            fetch_logs_from_worker: "False"
+            worker_container_repository: "apache/airflow"
+            worker_container_tag: "2.7.3-python3.10"
+            enable_kubernetes_executor_logs: "False"
+          logging:
+            encrypt_s3_logs: "False"
+            remote_logging: "True"
+            remote_base_log_folder: "gs://pz-buck-888/logs" 
+            remote_log_conn_id: "google_cloud_default"
+            task_log_reader: "remote"
 
         web:
           service:
