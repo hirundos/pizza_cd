@@ -1,6 +1,5 @@
 from airflow import DAG
 from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
-from kubernetes.client import models as k8s
 from datetime import datetime
 
 default_args = {
@@ -10,26 +9,18 @@ default_args = {
     "retries": 1,
 }
 
-k8s_volume_mount = k8s.V1VolumeMount(
-    name='dags-volume',         
-    mount_path='/opt/dags',    
-    read_only=True             
-)
-
-k8s_volume = k8s.V1Volume(
-    name='dags-volume',         
-    persistent_volume_claim=k8s.V1PersistentVolumeClaimVolumeSource(
-        claim_name='airflow-dags-pvc'
-    )
-)
-
-
 with DAG(
     dag_id="spark_etl_pipeline_k8s",
     default_args=default_args,
     schedule_interval=None,
     catchup=False,
 ) as dag:
+
+
+    GIT_REPO = "https://github.com/hirundos/pizza_cd.git"
+    GIT_BRANCH = "main"
+    GIT_SUBPATH = "dags" 
+    MOUNT_PATH = "/opt/dags"
 
     bronze = KubernetesPodOperator(
         task_id="spark_bronze",
@@ -40,8 +31,10 @@ with DAG(
         arguments=["kubectl apply -f /opt/dags/spark-apps/bronze.yaml"],
         get_logs=True,
         service_account_name="spark-app-runner",
-        volumes=[k8s_volume],
-        volume_mounts=[k8s_volume_mount]
+        git_sync_repo=GIT_REPO,
+        git_sync_branch=GIT_BRANCH,
+        git_sync_subpath=GIT_SUBPATH,
+        git_sync_mount_path=MOUNT_PATH
     )
 
     silver = KubernetesPodOperator(
@@ -53,8 +46,10 @@ with DAG(
         arguments=["kubectl apply -f /opt/dags/spark-apps/silver.yaml"],
         get_logs=True,
         service_account_name="spark-app-runner",
-        volumes=[k8s_volume],
-        volume_mounts=[k8s_volume_mount]
+        git_sync_repo=GIT_REPO,
+        git_sync_branch=GIT_BRANCH,
+        git_sync_subpath=GIT_SUBPATH,
+        git_sync_mount_path=MOUNT_PATH
     )
 
     gold = KubernetesPodOperator(
@@ -65,9 +60,11 @@ with DAG(
         cmds=["sh", "-c"],
         arguments=["kubectl apply -f /opt/dags/spark-apps/gold.yaml"],
         get_logs=True,
-        service_account_name="spark-app-runner",
-        volumes=[k8s_volume],
-        volume_mounts=[k8s_volume_mount]    
+        service_account_name="spark-app-runner", 
+        git_sync_repo=GIT_REPO,
+        git_sync_branch=GIT_BRANCH,
+        git_sync_subpath=GIT_SUBPATH,
+        git_sync_mount_path=MOUNT_PATH
     )
 
     bronze >> silver >> gold
