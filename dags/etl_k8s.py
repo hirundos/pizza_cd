@@ -45,7 +45,7 @@ with DAG(
     bronze = KubernetesPodOperator(
         task_id="spark_bronze",
         name="spark-bronze",
-        namespace="spark-operator", 
+        namespace="airflow", 
         image="bitnami/kubectl:latest", 
         cmds=["sh", "-c"],
         arguments=["kubectl apply -f /opt/dags/spark-apps/bronze.yaml"],
@@ -61,7 +61,7 @@ with DAG(
     silver = KubernetesPodOperator(
         task_id="spark_silver",
         name="spark-silver",
-        namespace="spark-operator",
+        namespace="airflow",
         image="bitnami/kubectl:latest",
         cmds=["sh", "-c"],
         arguments=["kubectl apply -f /opt/dags/spark-apps/silver.yaml"],
@@ -77,7 +77,7 @@ with DAG(
     gold = KubernetesPodOperator(
         task_id="spark_gold",
         name="spark-gold",
-        namespace="spark-operator",
+        namespace="airflow",
         image="bitnami/kubectl:latest",
         cmds=["sh", "-c"],
         arguments=["kubectl apply -f /opt/dags/spark-apps/gold.yaml"],
