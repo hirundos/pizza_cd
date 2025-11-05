@@ -51,7 +51,7 @@ with DAG(
         arguments=["kubectl apply -f /opt/dags/spark-apps/bronze.yaml"],
         get_logs=True,
         is_delete_operator_pod=True, 
-        service_account_name="spark-app-runner",
+        service_account_name="airflow-spark-runner",
         
         init_containers=[git_sync_init_container],
         volumes=[k8s_volume],
@@ -67,7 +67,7 @@ with DAG(
         arguments=["kubectl apply -f /opt/dags/spark-apps/silver.yaml"],
         get_logs=True,
         is_delete_operator_pod=True,
-        service_account_name="spark-app-runner",
+        service_account_name="airflow-spark-runner",
         
         init_containers=[git_sync_init_container],
         volumes=[k8s_volume],
@@ -83,7 +83,7 @@ with DAG(
         arguments=["kubectl apply -f /opt/dags/spark-apps/gold.yaml"],
         get_logs=True,
         is_delete_operator_pod=True,
-        service_account_name="spark-app-runner",
+        service_account_name="airflow-spark-runner",
         init_containers=[git_sync_init_container],
         volumes=[k8s_volume],
         volume_mounts=[k8s_volume_mount]
