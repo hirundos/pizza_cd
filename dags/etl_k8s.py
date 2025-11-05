@@ -50,7 +50,7 @@ git_sync_init_container = k8s.V1Container(
         k8s.V1EnvVar(name='GIT_SYNC_SUBPATH', value='dags'),   
         k8s.V1EnvVar(name='GIT_SYNC_ONE_TIME', value='true'),
         k8s.V1EnvVar(name='GIT_SYNC_SSH', value='true'), 
-        k8s.V1EnvVar(name='GIT_SSH_KEY_FILE', value='/etc/git-secret'), 
+        k8s.V1EnvVar(name='GIT_SSH_KEY_FILE', value='/etc/git-secret/ssh'), 
         k8s.V1EnvVar(name='GIT_SYNC_DISABLE_SSH_HOST_KEY_VERIFICATION', value='true'),
     ]
 )
