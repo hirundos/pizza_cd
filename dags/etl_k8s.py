@@ -26,8 +26,7 @@ k8s_volume_mount = k8s.V1VolumeMount(
 ssh_key_volume = k8s.V1Volume(
     name='git-ssh-key-volume',
     secret=k8s.V1SecretVolumeSource(
-        secret_name='git-ssh-key',
-        default_mode=0o400 
+        secret_name='git-ssh-key'
     )
 )
 
