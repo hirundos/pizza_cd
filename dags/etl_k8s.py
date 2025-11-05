@@ -2,6 +2,11 @@ from airflow import DAG
 from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
 from kubernetes.client import models as k8s
 from datetime import datetime
+from kubernetes.client import models as k8s
+
+pod_security_context = k8s.V1PodSecurityContext(
+    fs_group=65533
+)
 
 default_args = {
     "owner": "airflow",
@@ -26,7 +31,7 @@ git_sync_init_container = k8s.V1Container(
     image='k8s.gcr.io/git-sync/git-sync:v3.6.3', 
     volume_mounts=[k8s_volume_mount],          
     env=[
-        k8s.V1EnvVar(name='GIT_SYNC_REPO', value='https://github.com/hirundos/pizza_cd.git'),
+        k8s.V1EnvVar(name='GIT_SYNC_REPO', value='git@github.com:hirundos/pizza_cd.git'),
         k8s.V1EnvVar(name='GIT_SYNC_BRANCH', value='main'),
         k8s.V1EnvVar(name='GIT_SYNC_ROOT', value='/opt/dags'), 
         k8s.V1EnvVar(name='GIT_SYNC_DEST', value='.'),         
@@ -46,6 +51,7 @@ with DAG(
         task_id="spark_bronze",
         name="spark-bronze",
         namespace="default", 
+        security_context=pod_security_context,
         image="bitnami/kubectl:latest", 
         cmds=["sh", "-c"],
         arguments=["kubectl apply -f /opt/dags/spark-apps/bronze.yaml"],
