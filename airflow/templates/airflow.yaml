@@ -59,6 +59,10 @@ spec:
             revision: HEAD
             depth: 1
             wait: 60
+            securityContext:
+            runAsUser: 0
+            runAsGroup: 0
+            fsGroup: 0
 
         externalDatabase:
           enabled: true
