@@ -33,6 +33,7 @@ git_sync_init_container = k8s.V1Container(
         k8s.V1EnvVar(name='GIT_SYNC_DEST', value=''),          
         k8s.V1EnvVar(name='GIT_SYNC_SUBPATH', value='dags'),   
         k8s.V1EnvVar(name='GIT_SYNC_ONE_TIME', value='true'),
+        k8s.V1EnvVar(name='GIT_SYNC_DEST', value='repo')
         k8s.V1EnvVar(
             name='GIT_SYNC_USERNAME', 
             value_from=k8s.V1EnvVarSource(
@@ -64,7 +65,7 @@ with DAG(
         ),
         image="bitnami/kubectl:latest", 
         cmds=["sh", "-c"],
-        arguments=["ls -lR /opt/dags && kubectl apply -f /opt/dags/spark-apps/bronze.yaml"],
+        arguments=["kubectl apply -f /opt/dags/repo/spark-apps/bronze.yaml"],
         service_account_name="pizza-airflow",
         get_logs=False,   
         is_delete_operator_pod=False,
@@ -82,7 +83,7 @@ with DAG(
         ),
         image="bitnami/kubectl:latest",
         cmds=["sh", "-c"],
-        arguments=["kubectl apply -f /opt/dags/spark-apps/silver.yaml"],
+        arguments=["kubectl apply -f /opt/dags/repo/spark-apps/silver.yaml"],
         get_logs=False,
         is_delete_operator_pod=True,
         service_account_name="pizza-airflow",
@@ -101,7 +102,7 @@ with DAG(
         ),
         image="bitnami/kubectl:latest",
         cmds=["sh", "-c"],
-        arguments=["kubectl apply -f /opt/dags/spark-apps/gold.yaml"],
+        arguments=["kubectl apply -f /opt/dags/repo/spark-apps/gold.yaml"],
         get_logs=False,
         is_delete_operator_pod=True,
         service_account_name="pizza-airflow",
