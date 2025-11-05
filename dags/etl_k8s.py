@@ -33,7 +33,7 @@ git_sync_init_container = k8s.V1Container(
         k8s.V1EnvVar(name='GIT_SYNC_DEST', value=''),          
         k8s.V1EnvVar(name='GIT_SYNC_SUBPATH', value='dags'),   
         k8s.V1EnvVar(name='GIT_SYNC_ONE_TIME', value='true'),
-        k8s.V1EnvVar(name='GIT_SYNC_DEST', value='repo')
+        k8s.V1EnvVar(name='GIT_SYNC_DEST', value='repo'),
         k8s.V1EnvVar(
             name='GIT_SYNC_USERNAME', 
             value_from=k8s.V1EnvVarSource(
