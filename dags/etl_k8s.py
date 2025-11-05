@@ -33,7 +33,7 @@ ssh_key_volume = k8s.V1Volume(
 
 ssh_key_volume_mount = k8s.V1VolumeMount(
     name='git-ssh-key-volume',
-    mount_path='/etc/git-ssh', 
+    mount_path='/etc/git-secret', 
     read_only=True
 )
 git_sync_init_container = k8s.V1Container(
@@ -50,7 +50,7 @@ git_sync_init_container = k8s.V1Container(
         k8s.V1EnvVar(name='GIT_SYNC_SUBPATH', value='dags'),   
         k8s.V1EnvVar(name='GIT_SYNC_ONE_TIME', value='true'),
         k8s.V1EnvVar(name='GIT_SYNC_SSH', value='true'), 
-        k8s.V1EnvVar(name='GIT_SSH_KEY_FILE', value='/etc/git-ssh/ssh'), 
+        k8s.V1EnvVar(name='GIT_SSH_KEY_FILE', value='/etc/git-secret'), 
         k8s.V1EnvVar(name='GIT_SYNC_DISABLE_SSH_HOST_KEY_VERIFICATION', value='true'),
     ]
 )
