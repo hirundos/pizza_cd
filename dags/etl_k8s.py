@@ -50,9 +50,10 @@ with DAG(
         cmds=["sh", "-c"],
         arguments=["kubectl apply -f /opt/dags/spark-apps/bronze.yaml"],
         get_logs=True,
-        is_delete_operator_pod=True, 
         service_account_name="pizza-airflow",
-        startup_timeout_seconds=600,
+        get_logs=False,               
+        startup_timeout_seconds=600,   
+        is_delete_operator_pod=False,
         init_containers=[git_sync_init_container],
         volumes=[k8s_volume],
         volume_mounts=[k8s_volume_mount]
