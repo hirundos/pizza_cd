@@ -38,7 +38,9 @@ ssh_key_volume_mount = k8s.V1VolumeMount(
 git_sync_init_container = k8s.V1Container(
     name='git-sync',
     image='k8s.gcr.io/git-sync/git-sync:v3.6.3', 
-    
+    security_context=k8s.V1SecurityContext(
+        run_as_user=0
+    ),
     volume_mounts=[k8s_volume_mount, 
                    k8s.V1VolumeMount(name='git-ssh-key-volume', 
                                      mount_path='/etc/git-secret', 
