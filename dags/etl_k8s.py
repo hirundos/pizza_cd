@@ -40,8 +40,11 @@ git_sync_init_container = k8s.V1Container(
     name='git-sync',
     image='k8s.gcr.io/git-sync/git-sync:v3.6.3', 
     
-    volume_mounts=[k8s_volume_mount, ssh_key_volume_mount],          
-
+    volume_mounts=[k8s_volume_mount, 
+                   k8s.V1VolumeMount(name='git-ssh-key-volume', 
+                                     mount_path='/etc/git-secret', 
+                                     read_only=True)
+                  ],
     env=[
         k8s.V1EnvVar(name='GIT_SYNC_REPO', value='git@github.com:hirundos/pizza_cd.git'),
         k8s.V1EnvVar(name='GIT_SYNC_BRANCH', value='main'),
