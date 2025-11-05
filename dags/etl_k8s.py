@@ -3,10 +3,6 @@ from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import Kubernete
 from kubernetes.client import models as k8s
 from datetime import datetime
 
-pod_security_context = k8s.V1PodSecurityContext(
-    fs_group=65533
-)
-
 default_args = {
     "owner": "airflow",
     "depends_on_past": False,
@@ -26,6 +22,9 @@ k8s_volume_mount = k8s.V1VolumeMount(
 git_sync_init_container = k8s.V1Container(
     name='git-sync',
     image='k8s.gcr.io/git-sync/git-sync:v3.6.3', 
+    security_context=k8s.V1SecurityContext(
+        run_as_user=0
+    ),
     volume_mounts=[k8s_volume_mount],
     env=[
         k8s.V1EnvVar(name='GIT_SYNC_REPO', value='https://github.com/hirundos/pizza_cd.git'),
@@ -60,7 +59,9 @@ with DAG(
         task_id="spark_bronze",
         name="spark-bronze",
         namespace="default", 
-        security_context=pod_security_context, 
+        security_context=k8s.V1SecurityContext(
+            run_as_user=0
+        ),
         image="bitnami/kubectl:latest", 
         cmds=["sh", "-c"],
         arguments=["kubectl apply -f /opt/dags/spark-apps/bronze.yaml"],
@@ -77,7 +78,9 @@ with DAG(
         task_id="spark_silver",
         name="spark-silver",
         namespace="default",
-        security_context=pod_security_context, 
+        security_context=k8s.V1SecurityContext(
+            run_as_user=0
+        ),
         image="bitnami/kubectl:latest",
         cmds=["sh", "-c"],
         arguments=["kubectl apply -f /opt/dags/spark-apps/silver.yaml"],
@@ -94,7 +97,9 @@ with DAG(
         task_id="spark_gold",
         name="spark-gold",
         namespace="default",
-        security_context=pod_security_context, 
+        security_context=k8s.V1SecurityContext(
+            run_as_user=0
+        ),
         image="bitnami/kubectl:latest",
         cmds=["sh", "-c"],
         arguments=["kubectl apply -f /opt/dags/spark-apps/gold.yaml"],
