@@ -49,7 +49,6 @@ with DAG(
         image="bitnami/kubectl:latest", 
         cmds=["sh", "-c"],
         arguments=["kubectl apply -f /opt/dags/spark-apps/bronze.yaml"],
-        get_logs=True,
         service_account_name="pizza-airflow",
         get_logs=False,               
         startup_timeout_seconds=600,   
