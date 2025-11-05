@@ -30,7 +30,7 @@ git_sync_init_container = k8s.V1Container(
         k8s.V1EnvVar(name='GIT_SYNC_REPO', value='https://github.com/hirundos/pizza_cd.git'),
         k8s.V1EnvVar(name='GIT_SYNC_BRANCH', value='main'),
         k8s.V1EnvVar(name='GIT_SYNC_ROOT', value='/opt/dags'), 
-        k8s.V1EnvVar(name='GIT_SYNC_DEST', value='.'),          
+        k8s.V1EnvVar(name='GIT_SYNC_DEST', value=''),          
         k8s.V1EnvVar(name='GIT_SYNC_SUBPATH', value='dags'),   
         k8s.V1EnvVar(name='GIT_SYNC_ONE_TIME', value='true'),
         k8s.V1EnvVar(
