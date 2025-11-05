@@ -5,7 +5,7 @@ metadata:
   namespace: spark-operator
 subjects:
   - kind: ServiceAccount
-    name: airflow-spark-runner
+    name: pizza-airflow
     namespace: airflow
 roleRef:
   kind: Role
