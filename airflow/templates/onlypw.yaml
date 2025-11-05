@@ -1,9 +1,0 @@
-# secret.yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: airflow-db-password-only
-  namespace: airflow
-type: Opaque
-data:
-  connection: cG9zdGdyZXNxbCtwc3ljb3BnMjovL215X3VzZXI6MTIzNEBjbG91ZHNxbC1wcm94eS1zdmMuZGVmYXVsdDo1NDMyL3Bpenph

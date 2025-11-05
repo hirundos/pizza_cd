@@ -85,7 +85,7 @@ spec:
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: airflow
+    namespace: default
 
   syncPolicy:
     automated:
