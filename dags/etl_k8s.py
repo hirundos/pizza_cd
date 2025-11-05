@@ -23,37 +23,29 @@ k8s_volume_mount = k8s.V1VolumeMount(
     mount_path='/opt/dags' 
 )
 
-ssh_key_volume = k8s.V1Volume(
-    name='git-ssh-key-volume',
-    secret=k8s.V1SecretVolumeSource(
-        secret_name='git-ssh-key',
-        default_mode=0o440
-    )
-)
-
-ssh_key_volume_mount = k8s.V1VolumeMount(
-    name='git-ssh-key-volume',
-    mount_path='/etc/git-secret', 
-    read_only=True
-)
 git_sync_init_container = k8s.V1Container(
     name='git-sync',
     image='k8s.gcr.io/git-sync/git-sync:v3.6.3', 
-    volume_mounts=[k8s_volume_mount, 
-                   k8s.V1VolumeMount(name='git-ssh-key-volume', 
-                                     mount_path='/etc/git-secret', 
-                                     read_only=True)
-                  ],
+    volume_mounts=[k8s_volume_mount],
     env=[
-        k8s.V1EnvVar(name='GIT_SYNC_REPO', value='git@github.com:hirundos/pizza_cd.git'),
+        k8s.V1EnvVar(name='GIT_SYNC_REPO', value='https://github.com/hirundos/pizza_cd.git'),
         k8s.V1EnvVar(name='GIT_SYNC_BRANCH', value='main'),
         k8s.V1EnvVar(name='GIT_SYNC_ROOT', value='/opt/dags'), 
         k8s.V1EnvVar(name='GIT_SYNC_DEST', value='.'),          
         k8s.V1EnvVar(name='GIT_SYNC_SUBPATH', value='dags'),   
         k8s.V1EnvVar(name='GIT_SYNC_ONE_TIME', value='true'),
-        k8s.V1EnvVar(name='GIT_SYNC_SSH', value='true'), 
-        k8s.V1EnvVar(name='GIT_SSH_KEY_FILE', value='/etc/git-secret/ssh'), 
-        k8s.V1EnvVar(name='GIT_SYNC_DISABLE_SSH_HOST_KEY_VERIFICATION', value='true'),
+        k8s.V1EnvVar(
+            name='GIT_SYNC_USERNAME', 
+            value_from=k8s.V1EnvVarSource(
+                secret_key_ref=k8s.V1SecretKeySelector(name='git-https-pat', key='username')
+            )
+        ),
+        k8s.V1EnvVar(
+            name='GIT_SYNC_PASSWORD', 
+            value_from=k8s.V1EnvVarSource(
+                secret_key_ref=k8s.V1SecretKeySelector(name='git-https-pat', key='token')
+            )
+        )
     ]
 )
 
@@ -77,7 +69,7 @@ with DAG(
         is_delete_operator_pod=True,
         
         init_containers=[git_sync_init_container],
-        volumes=[k8s_volume, ssh_key_volume],
+        volumes=[k8s_volume],
         volume_mounts=[k8s_volume_mount]
     )
 
@@ -94,7 +86,7 @@ with DAG(
         service_account_name="pizza-airflow",
         
         init_containers=[git_sync_init_container],
-        volumes=[k8s_volume, ssh_key_volume],
+        volumes=[k8s_volume],
         volume_mounts=[k8s_volume_mount]
     )
 
@@ -111,7 +103,7 @@ with DAG(
         service_account_name="pizza-airflow",
 
         init_containers=[git_sync_init_container],
-        volumes=[k8s_volume, ssh_key_volume],
+        volumes=[k8s_volume],
         volume_mounts=[k8s_volume_mount]
     )
 
