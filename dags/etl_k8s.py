@@ -2,7 +2,6 @@ from airflow import DAG
 from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
 from kubernetes.client import models as k8s
 from datetime import datetime
-from kubernetes.client import models as k8s
 
 pod_security_context = k8s.V1PodSecurityContext(
     fs_group=65533
@@ -36,7 +35,9 @@ git_sync_init_container = k8s.V1Container(
         k8s.V1EnvVar(name='GIT_SYNC_ROOT', value='/opt/dags'), 
         k8s.V1EnvVar(name='GIT_SYNC_DEST', value='.'),         
         k8s.V1EnvVar(name='GIT_SYNC_SUBPATH', value='dags'),   
-        k8s.V1EnvVar(name='GIT_SYNC_ONE_TIME', value='true')   
+        k8s.V1EnvVar(name='GIT_SYNC_ONE_TIME', value='true'),
+        k8s.V1EnvVar(name='GIT_SYNC_SSH_KEY_SECRET_NAME', value='git-ssh-key'),
+        k8s.V1EnvVar(name='GIT_SYNC_KNOWN_HOSTS', value='false'),
     ]
 )
 
