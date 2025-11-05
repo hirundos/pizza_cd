@@ -14,33 +14,6 @@ default_args = {
     "retries": 1,
 }
 
-k8s_volume = k8s.V1Volume(
-    name='git-sync-volume', 
-    empty_dir=k8s.V1EmptyDirVolumeSource()
-)
-
-k8s_volume_mount = k8s.V1VolumeMount(
-    name='git-sync-volume',    
-    mount_path='/opt/dags'  
-)
-
-
-git_sync_init_container = k8s.V1Container(
-    name='git-sync',
-    image='k8s.gcr.io/git-sync/git-sync:v3.6.3', 
-    volume_mounts=[k8s_volume_mount],          
-    env=[
-        k8s.V1EnvVar(name='GIT_SYNC_REPO', value='git@github.com:hirundos/pizza_cd.git'),
-        k8s.V1EnvVar(name='GIT_SYNC_BRANCH', value='main'),
-        k8s.V1EnvVar(name='GIT_SYNC_ROOT', value='/opt/dags'), 
-        k8s.V1EnvVar(name='GIT_SYNC_DEST', value='.'),         
-        k8s.V1EnvVar(name='GIT_SYNC_SUBPATH', value='dags'),   
-        k8s.V1EnvVar(name='GIT_SYNC_ONE_TIME', value='true'),
-        k8s.V1EnvVar(name='GIT_SYNC_SSH_KEY_SECRET_NAME', value='git-ssh-key'),
-        k8s.V1EnvVar(name='GIT_SYNC_KNOWN_HOSTS', value='false'),
-    ]
-)
-
 with DAG(
     dag_id="spark_etl_pipeline_k8s",
     default_args=default_args,
@@ -51,47 +24,61 @@ with DAG(
     bronze = KubernetesPodOperator(
         task_id="spark_bronze",
         name="spark-bronze",
-        namespace="default", 
-        security_context=pod_security_context,
+        namespace="default",
+        security_context=pod_security_context, 
         image="bitnami/kubectl:latest", 
         cmds=["sh", "-c"],
         arguments=["kubectl apply -f /opt/dags/spark-apps/bronze.yaml"],
         service_account_name="pizza-airflow",
-        get_logs=False,               
+        get_logs=False,
         is_delete_operator_pod=True,
-        init_containers=[git_sync_init_container],
-        volumes=[k8s_volume],
-        volume_mounts=[k8s_volume_mount]
+        
+        git_sync_repo="git@github.com:hirundos/pizza_cd.git",
+        git_sync_branch="main",
+        git_sync_subpath="dags",
+        git_sync_one_time=True,
+        git_sync_ssh_key_secret_name="git-ssh-key",
+        git_sync_known_hosts=False                   
     )
 
     silver = KubernetesPodOperator(
         task_id="spark_silver",
         name="spark-silver",
         namespace="default",
+        security_context=pod_security_context,
         image="bitnami/kubectl:latest",
         cmds=["sh", "-c"],
         arguments=["kubectl apply -f /opt/dags/spark-apps/silver.yaml"],
         get_logs=False,
         is_delete_operator_pod=True,
         service_account_name="pizza-airflow",
-        init_containers=[git_sync_init_container],
-        volumes=[k8s_volume],
-        volume_mounts=[k8s_volume_mount]
+        
+        git_sync_repo="git@github.com:hirundos/pizza_cd.git",
+        git_sync_branch="main",
+        git_sync_subpath="dags",
+        git_sync_one_time=True,
+        git_sync_ssh_key_secret_name="git-ssh-key",
+        git_sync_known_hosts=False
     )
 
     gold = KubernetesPodOperator(
         task_id="spark_gold",
         name="spark-gold",
         namespace="default",
+        security_context=pod_security_context, 
         image="bitnami/kubectl:latest",
         cmds=["sh", "-c"],
         arguments=["kubectl apply -f /opt/dags/spark-apps/gold.yaml"],
         get_logs=False,
         is_delete_operator_pod=True,
         service_account_name="pizza-airflow",
-        init_containers=[git_sync_init_container],
-        volumes=[k8s_volume],
-        volume_mounts=[k8s_volume_mount]
+        
+        git_sync_repo="git@github.com:hirundos/pizza_cd.git",
+        git_sync_branch="main",
+        git_sync_subpath="dags",
+        git_sync_one_time=True,
+        git_sync_ssh_key_secret_name="git-ssh-key",
+        git_sync_known_hosts=False
     )
 
     bronze >> silver >> gold
