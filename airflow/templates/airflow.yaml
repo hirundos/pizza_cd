@@ -21,7 +21,8 @@ spec:
             AIRFLOW__LOGGING__REMOTE_LOGGING: "True"
             AIRFLOW__LOGGING__REMOTE_BASE_LOG_FOLDER: "gs://pz-buck-888/logs"
             AIRFLOW__LOGGING__REMOTE_LOG_CONN_ID: "pizza-airflow"
-
+          kubernetes:
+            get_logs: true
         web:
           service:
             type: LoadBalancer
