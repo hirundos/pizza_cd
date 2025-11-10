@@ -66,7 +66,7 @@ with DAG(
         image="bitnami/kubectl:latest", 
         cmds=["sh", "-c"],
         arguments=["kubectl apply -f /opt/dags/repo/dags/spark-apps/bronze.yaml && "
-        "kubectl wait --for=condition=Succeeded sparkapplication/bronze-etl --timeout=600s"],
+        "kubectl wait --for=jsonpath='{.status.applicationState.state}'=COMPLETED sparkapplication/bronze-etl --timeout=600s"],
         service_account_name="pizza-airflow",
         get_logs=True,   
         is_delete_operator_pod=False,
@@ -85,7 +85,7 @@ with DAG(
         image="bitnami/kubectl:latest",
         cmds=["sh", "-c"],
         arguments=["kubectl apply -f /opt/dags/repo/dags/spark-apps/silver.yaml && "
-        "kubectl wait --for=condition=Succeeded sparkapplication/silver-etl --timeout=600s"],
+        "kubectl wait --for=jsonpath='{.status.applicationState.state}'=COMPLETED sparkapplication/silver-etl --timeout=600s"],
         get_logs=True,
         is_delete_operator_pod=True,
         service_account_name="pizza-airflow",
@@ -105,7 +105,7 @@ with DAG(
         image="bitnami/kubectl:latest",
         cmds=["sh", "-c"],
         arguments=["kubectl apply -f /opt/dags/repo/dags/spark-apps/gold.yaml && "
-        "kubectl wait --for=condition=Succeeded sparkapplication/gold-etl --timeout=600s"],
+        "kubectl wait --for=jsonpath='{.status.applicationState.state}'=COMPLETED sparkapplication/gold-etl --timeout=600s"],
         get_logs=True,
         is_delete_operator_pod=True,
         service_account_name="pizza-airflow",
